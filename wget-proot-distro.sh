@@ -105,6 +105,7 @@ echo "127.0.0.1 localhost " >> $PD/$ds_name/etc/hosts
 rm -rf $PD/$ds_name/etc/resolv.conf
 echo "nameserver 8.8.8.8 " >> $PD/$ds_name/etc/resolv.conf
 echo "touch .hushlogin" >> $PD/$ds_name/root/.bashrc
+echo -e "#!/bin/sh\nexit" > "$PD/$ds_name/usr/bin/groups"
 
 #Adding distro in proot-distro list
 echo "

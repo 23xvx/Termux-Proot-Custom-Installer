@@ -78,17 +78,21 @@ if [ -d "$folder" ]; then
 else 
 mkdir -p $folder
 fi
+
 #Downloading and decompressing rootfs
+clear
+echo ${G}"Downloading Rootfs....."${W}
 wget $URL -P ~/$folder/ 
 echo ${G}"Decompressing Rootfs....."
 proot --link2symlink \
     tar -xpf ~/$folder/*.tar.* -C ~/$folder/ --exclude='dev'||:
-if [[ ! -d "~/$folder/bin" ]]; then
-     mv ~/$folder/*/* ~/$folder/
+if [[ ! -d "$folder/etc" ]]; then
+     mv $folder/*/* $folder/
 fi
 echo "127.0.0.1 localhost" > ~/$folder/etc/hosts
 rm -rf ~/$folder/etc/resolv.conf
 echo "nameserver 8.8.8.8" > ~/$folder/etc/resolv.conf
+echo -e "#!/bin/sh\nexit" > "$folder/usr/bin/groups"
 mkdir -p $folder/binds
 
 
@@ -150,6 +154,7 @@ exit" > $folder/root/.bash_profile
 clear
 termux-fix-shebang $bin
 rm -rf $folder/*.tar.*
+bash $bin
 
 echo ""
 echo ${R}"If you find problem, try to restart Termux !"
