@@ -14,12 +14,6 @@ Y="$(printf '\033[1;33m')"
 W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
 
-echo ""
-echo ${C}"Script made by No Hope#0281 "
-echo ""
-sleep2
-clear
-
 #Warning
 echo ${R}"Warning!
 This script is not a suggested way for installing distro in termux.
@@ -95,7 +89,7 @@ fi
 
 #Downloading and Decompressing rootfs
 mkdir -p $PD/$ds_name
-echo ${G}"Downloading rootfs"
+echo ${G}"Downloading rootfs"${W}
 wget $URL 
 echo ${G}"Decompressing rootfs"
 proot --link2symlink  \
@@ -124,3 +118,4 @@ clear
 echo ${G}"Installation Finish!"
 echo ${G}"Now you can login to your distro by" 
 echo ${Y}"proot-distro login $ds_name"
+echo ${R}"Notice : You cannot install it by proot-distro after removing it."
