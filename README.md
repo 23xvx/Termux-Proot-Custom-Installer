@@ -5,13 +5,15 @@
 
 ### 1. Via proot-distro
 Paste following command into Termux.
-``` curl 
-    bash .sh
+``` 
+curl https://raw.githubusercontent.com/23xvx/Termux-Proot-Custom-Installer/main/wget-proot-distro.sh >> wget-proot-distro.sh
+bash wget-proot-distro.sh
 ```
 ### 2. Via Custom Proot
 Paste following command into Termux.
-``` curl
-
+``` 
+curl https://raw.githubusercontent.com/23xvx/Termux-Proot-Custom-Installer/main/wget-proot.sh >> wget-proot.sh
+bash wget-proot.sh
 ```
  
 
