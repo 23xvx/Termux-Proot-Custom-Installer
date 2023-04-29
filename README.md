@@ -1,6 +1,6 @@
 ### Termux-Proot-Custom-Installer
  A script to install any distro by yourself in Termux.
- You need to find rootfs images by your self.
+ You need to find rootfs images by yourself.
  Rootfs can be from [proot-distro](https://github.com/termux/proot-distro), [Udroid](https://github.com/RandomCoderOrg/ubuntu-on-android) or any other site.
 
 ### 1. Via proot-distro
