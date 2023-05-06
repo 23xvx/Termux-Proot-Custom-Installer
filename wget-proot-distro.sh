@@ -108,13 +108,15 @@ echo "touch .hushlogin" >> $PD/$ds_name/root/.bashrc
 echo -e "#!/bin/sh\nexit" > "$PD/$ds_name/usr/bin/groups"
 
 #Adding distro in proot-distro list
-echo "
-# This is a default distribution plug-in.
-# Do not modify this file as your changes will be overwritten on next update.
-# If you want customize installation, please make a copy.
+if [[ ! -f "$PREFIX/etc/proot-distro/$ds_name.sh" ]]; then
+    echo "
+    # This is a default distribution plug-in.
+    # Do not modify this file as your changes will be overwritten on next update.
+    # If you want customize installation, please make a copy.
 
-DISTRO_NAME="$ds_name" ">> $SCRIPT/$ds_name.sh 
-
+    DISTRO_NAME="$ds_name" 
+    ">> $SCRIPT/$ds_name.sh 
+fi
 clear
 echo ${G}"Installation Finish!"
 echo ${G}"Now you can login to your distro by" 
