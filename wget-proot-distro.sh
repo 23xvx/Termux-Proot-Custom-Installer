@@ -76,7 +76,6 @@ if [[ "$ans" =~ ^([yY])$ ]]
 then
     echo ${W}"Deleting existing directory...."${W}
     rm -rf $PD/$ds_name
-    rm -rf $PREFIX/etc/proot-distro/$ds_name.sh
     clear
 elif [[ "$ans" =~ ^([nN])$ ]]
 then
