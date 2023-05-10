@@ -62,8 +62,9 @@ sleep 2
 
 #checking intergrities
 
-if [[ ! -d "$PREFIX/var/lib/proot-distro/installed-rootfs" ]]; then
-    mkdir -p $PD
+if [[ ! -d "$PREFIX/var/lib/proot-distro" ]]; then
+    mkdir -p $PREFIX/var/lib/proot-distro
+    mkdir -p $PREFIX/var/lib/proot-distro/installed-rootfs
 fi 
 echo
 if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/$ds_name" ]]; then
