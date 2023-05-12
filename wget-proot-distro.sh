@@ -117,7 +117,11 @@ if [[ ! -f "$PREFIX/etc/proot-distro/$ds_name.sh" ]]; then
     DISTRO_NAME="$ds_name" 
     ">> $SCRIPT/$ds_name.sh 
 fi
+sleep 2
 clear
+
+#finish
+sleep 2
 echo ${G}"Installation Finish!"
 echo ${G}"Now you can login to your distro by" 
 echo ${Y}"proot-distro login $ds_name"
