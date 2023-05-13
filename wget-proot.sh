@@ -125,6 +125,7 @@ if [ -n "\$(ls -A $folder/binds)" ]; then
 fi
 command+=" -b /dev"
 command+=" -b /proc"
+command+=" -b /dev/null:/proc/stat"
 command+=" -b /sys"
 command+=" -b $folder/tmp:/dev/shm"
 command+=" -b /data/data/com.termux"
