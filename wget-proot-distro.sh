@@ -28,7 +28,7 @@ case `dpkg --print-architecture` in
     aarch64)
             echo "Please download the rootfs file for arm64." ;;
     arm*)
-            echo "Please download the rootfs file for armf." ;;
+            echo "Please download the rootfs file for armhf." ;;
     ppc64el)
             echo "Please download the rootfs file for ppc64el.";;
     x86_64)
