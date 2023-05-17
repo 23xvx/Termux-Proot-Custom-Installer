@@ -10,10 +10,10 @@ W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
 
 clear
-echo ""
+echo " "
 echo ${C}"Script made by No Hope#0281 "
-echo ""
-sleep2
+echo " "
+sleep 2
 clear
 
 #requirements
@@ -35,7 +35,7 @@ case `dpkg --print-architecture` in
     aarch64)
             echo "Please download the rootfs file for arm64." ;;
     arm*)
-            echo "Please download the rootfs file for armf." ;;
+            echo "Please download the rootfs file for armhf." ;;
     ppc64el)
             echo "Please download the rootfs file for ppc64el.";;
     x86_64)
@@ -83,7 +83,7 @@ fi
 clear
 echo ${G}"Downloading Rootfs....."${W}
 wget $URL -P ~/$folder/ 
-echo ${G}"Decompressing Rootfs....."
+echo ${G}"Decompressing Rootfs....."${W}
 proot --link2symlink \
     tar -xpf ~/$folder/*.tar.* -C ~/$folder/ --exclude='dev'||:
 if [[ ! -d "$folder/etc" ]]; then
@@ -102,6 +102,7 @@ pulseaudio --start \
     --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" \
     --exit-idle-time=-1 
 " >> ~/$de_name.sh 
+echo "export PULSE_SERVER=127.0.0.1" >> $folder/root/.bashrc
 
 ##script
 echo ${G}"writing launch script"
@@ -156,6 +157,7 @@ clear
 termux-fix-shebang $bin
 rm -rf $folder/*.tar.*
 bash $bin
+clear 
 
 echo ""
 echo ${R}"If you find problem, try to restart Termux !"
