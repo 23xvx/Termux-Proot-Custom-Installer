@@ -158,7 +158,7 @@ termux-fix-shebang $bin
 rm -rf $folder/*.tar.*
 bash $bin
 clear 
-
+rm -rf ~/wget-proot.sh
 echo ""
 echo ${R}"If you find problem, try to restart Termux !"
 echo ${G}"You can now start your distro with '$ds_name.sh' script next time"
