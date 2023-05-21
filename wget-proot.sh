@@ -128,6 +128,7 @@ command+=" -b /dev"
 command+=" -b /proc"
 command+=" -b /dev/null:/proc/stat"
 command+=" -b /sys"
+command+=" -b /data/data/com.termux/files/usr/tmp:/tmp"
 command+=" -b $folder/tmp:/dev/shm"
 command+=" -b /data/data/com.termux"
 command+=" -b /:/host-rootfs"
@@ -143,6 +144,9 @@ command+=" LANG=C.UTF-8"
 command+=" /bin/bash --login"
 com="\$@"
 if [ -z "\$1" ];then
+    pulseaudio --start \
+     --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" \
+     --exit-idle-time=-1;
     exec \$command
 else
     \$command -c "\$com"
