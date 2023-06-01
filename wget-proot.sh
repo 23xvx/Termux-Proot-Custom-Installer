@@ -9,23 +9,19 @@ Y="$(printf '\033[1;33m')"
 W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
 
-clear
+#Warning
+echo ${R}"Warning!
+Error may occur during installation."
 echo " "
 echo ${C}"Script made by No Hope#0281 "
-echo " "
 sleep 2
 clear
 
 #requirements
 pkg install proot pulseaudio wget -y
 clear
+echo "Please allow storage permissions"
 termux-setup-storage
-clear
-
-#Warning
-echo ${R}"Warning!
-Error may occur during installation."
-sleep 2
 clear
 
 #Notice
