@@ -89,6 +89,9 @@ if [ -d "$folder" ]; then
 else 
 mkdir -p $folder
 fi
+if [ ! -f "$path" ]; then
+        exit 1
+fi 
 
 #Downloading and decompressing rootfs
 clear      
