@@ -25,7 +25,7 @@ termux-setup-storage
 clear
 
 #Notice
-echo ${C}"Please check your architecture first in order to download the right rootfs."
+echo ${C}"Please check your architecture first in order to install the right rootfs."
 echo ${C}"Your architecture is $ARCHITECTURE ."
 case `dpkg --print-architecture` in
     aarch64)
@@ -45,15 +45,28 @@ sleep 1
 clear
 
 #Links
-echo ${G}"Please put in your URL here for downloading rootfs: "${W}
-read URL
-sleep 1
-echo ${G}"Please put in your distro name in order to login after all
+echo ${G}"Have you already downloaded the file? (y/n)"
+read link 
+if [[ "$link" =~ ^([yY])$ ]]; then 
+        echo ${G}"Please put in the absolute path you put the file in"
+        echo ${G}"If you put your file in your downloads, the absolute path would be"
+        echo ${Y}"/sdcard/Download/"your file""
+        read path  
+        sleep 1
+        echo ${G}"Your path is $path"
+        sleep 1 
+elif [[ "$link" =~ ^([nN])$ ]]; then
+        echo ${G}"Please put in your URL here for downloading rootfs: "${W}
+        read URL        
+        sleep 1
+else 
+        echo "Cannot identify your answer" ; exit 1
+fi 
+echo ${G}"Please put in your distro name in order to login after the installation.
 If you put in 'kali' , afterwards your login script will be 'bash kali.sh' "${W}
 read ds_name
 sleep 1
-echo ${Y}"your URl is $URL 
-and your distro name is $ds_name "${W}
+echo ${Y}"Your distro name is $ds_name "${W}
 sleep 2
 
 folder=$ds_name-fs
@@ -76,12 +89,15 @@ mkdir -p $folder
 fi
 
 #Downloading and decompressing rootfs
-clear
-echo ${G}"Downloading Rootfs....."${W}
-wget $URL -P ~/$folder/ 
+clear      
+if [[ "$link" =~ ^([nN])$ ]]; then
+        echo ${G}"Downloading Rootfs....."${W}
+        wget $URL -P ~/$folder/ 
+        path=~/$folder/*.tar.*
+fi 
 echo ${G}"Decompressing Rootfs....."${W}
 proot --link2symlink \
-    tar -xpf ~/$folder/*.tar.* -C ~/$folder/ --exclude='dev'||:
+    tar -xpf $path -C ~/$folder/ --exclude='dev'||:
 if [[ ! -d "$folder/etc" ]]; then
      mv $folder/*/* $folder/
 fi

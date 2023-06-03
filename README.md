@@ -15,5 +15,6 @@ Paste following command into Termux.
 curl https://raw.githubusercontent.com/23xvx/Termux-Proot-Custom-Installer/main/wget-proot.sh >> wget-proot.sh
 bash wget-proot.sh
 ```
- 
+### Updates
+03/06/2023 Adding option for already downloaded files.
 

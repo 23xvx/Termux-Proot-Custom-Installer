@@ -22,7 +22,7 @@ sleep 3
 clear
 
 #Notice
-echo ${C}"Please check your architecture first in order to download the right rootfs."
+echo ${C}"Please check your architecture first in order to install the right rootfs."
 echo ${C}"Your architecture is $ARCHITECTURE ."
 case `dpkg --print-architecture` in
     aarch64)
@@ -48,16 +48,24 @@ sleep 1
 clear
 
 #Links
-echo ${G}"Please put in your URL here for downloading rootfs: "${W}
-read URL
-sleep 1
-echo ${G}"Please put in your distro name in order to login after all
-If you put in 'kali' , everytime you login will be 
-'proot-distro login kali' "${W}
-read ds_name
-sleep 1
-echo ${Y}"your URl is $URL 
-and your distro name is $ds_name "${W}
+echo ${G}"Have you already downloaded the file? (y/n)"
+read link 
+if [[ "$link" =~ ^([yY])$ ]]; then 
+        echo ${G}"Please put in the absolute path you put the file in"
+        echo ${G}"If you put your file in your downloads, the absolute path would be"
+        echo ${Y}"/sdcard/Download/"your file""
+        read path  
+        sleep 1
+        echo ${G}"Your path is $path"
+        sleep 1 
+elif [[ "$link" =~ ^([nN])$ ]]; then
+        echo ${G}"Please put in your URL here for downloading rootfs: "${W}
+        read URL        
+        sleep 1
+else 
+        echo "Cannot identify your answer" ; exit 1
+fi 
+echo ${Y}"Your distro name is $ds_name "${W}
 sleep 2
 
 #checking intergrities
@@ -89,13 +97,15 @@ fi
 
 #Downloading and Decompressing rootfs
 mkdir -p $PD/$ds_name
-echo ${G}"Downloading rootfs"${W}
-wget $URL 
+if [[ "$link" =~ ^([nN])$ ]]; then
+    echo ${G}"Downloading rootfs"${W}
+    wget $URL  
+    path=~/*.tar.*
 echo ${G}"Decompressing rootfs"
 proot --link2symlink  \
     tar --warning=no-unknown-keyword \
         --delay-directory-restore --preserve-permissions \
-        -xpf ~/*.tar.* -C $PD/$ds_name/ --exclude='dev'||:
+        -xpf $path -C $PD/$ds_name/ --exclude='dev'||:
 rm -rf ~/*.tar.*
 if [[ ! -d "$PD/$ds_name/bin" ]]; then
      mv $PD/$ds_name/*/* $PD/$ds_name/
