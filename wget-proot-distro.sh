@@ -66,9 +66,9 @@ else
         echo "Cannot identify your answer" ; exit 1
 fi 
 echo ${G}"Please put in your distro name in order to login after the installation. 
- If you put in 'kali' , afterwards your login script will be 'bash kali.sh' "${W} 
- read ds_name 
- sleep 1
+If you put in 'kali' , afterwards your login script will be 'bash kali.sh' "${W} 
+read ds_name 
+sleep 1
 echo ${Y}"Your distro name is $ds_name "${W}
 sleep 2
 
