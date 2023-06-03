@@ -92,6 +92,7 @@ fi
 if [ ! -f "$path" ]; then
         echo ${R}"Cannot find your file"
         echo "No such file or directory "
+        sleep 2
         exit 1
 fi 
 
