@@ -57,6 +57,12 @@ if [[ "$link" =~ ^([yY])$ ]]; then
         echo ${Y}"Your path is $path"
         sleep 1 
         echo 
+        if [ ! -f "$path" ]; then
+        echo ${R}"Cannot find your file"
+        echo "No such file or directory "
+        sleep 2
+        exit 1
+        fi 
 elif [[ "$link" =~ ^([nN])$ ]]; then
         echo ${G}"Please put in your URL here for downloading rootfs: "${W}
         read URL        
@@ -89,12 +95,7 @@ if [ -d "$folder" ]; then
 else 
 mkdir -p $folder
 fi
-if [ ! -f "$path" ]; then
-        echo ${R}"Cannot find your file"
-        echo "No such file or directory "
-        sleep 2
-        exit 1
-fi 
+
 
 #Downloading and decompressing rootfs
 clear      
