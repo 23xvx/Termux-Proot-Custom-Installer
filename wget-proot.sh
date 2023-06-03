@@ -90,6 +90,8 @@ else
 mkdir -p $folder
 fi
 if [ ! -f "$path" ]; then
+        echo ${R}"Cannot find your file"
+        echo "No such file or directory "
         exit 1
 fi 
 
