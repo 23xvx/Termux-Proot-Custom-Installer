@@ -53,8 +53,10 @@ if [[ "$link" =~ ^([yY])$ ]]; then
         echo ${Y}"/sdcard/Download/"your file""
         read path  
         sleep 1
-        echo ${G}"Your path is $path"
+        echo 
+        echo ${Y}"Your path is $path"
         sleep 1 
+        echo 
 elif [[ "$link" =~ ^([nN])$ ]]; then
         echo ${G}"Please put in your URL here for downloading rootfs: "${W}
         read URL        
