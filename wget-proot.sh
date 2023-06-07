@@ -25,7 +25,7 @@ termux-setup-storage
 clear
 
 #Notice
-echo ${C}"Please check your architecture first in order to install the right rootfs."
+echo ${C}"Please check your architecture for downloading the right rootfs."
 echo ${C}"Your architecture is $ARCHITECTURE ."
 case `dpkg --print-architecture` in
     aarch64)
@@ -45,38 +45,16 @@ sleep 1
 clear
 
 #Links
-echo ${G}"Have you already downloaded the file? (y/n)"
-read link 
-if [[ "$link" =~ ^([yY])$ ]]; then 
-        echo ${G}"Please put in the absolute path you put the file in"
-        echo ${G}"If you put your file in your downloads, the absolute path would be"
-        echo ${Y}"/sdcard/Download/"your file""
-        read path  
-        sleep 1
-        echo 
-        echo ${Y}"Your path is $path"
-        sleep 1 
-        echo 
-        if [ ! -f "$path" ]; then
-        echo ${R}"Cannot find your file"
-        echo "No such file or directory "
-        sleep 2
-        exit 1
-        fi 
-elif [[ "$link" =~ ^([nN])$ ]]; then
-        echo ${G}"Please put in your URL here for downloading rootfs: "${W}
-        read URL        
-        sleep 1
-else 
-        echo "Cannot identify your answer" ; exit 1
-fi 
-echo ${G}"Please put in your distro name in order to login after the installation.
-If you put in 'kali' , afterwards your login script will be 'bash kali.sh' "${W}
+echo ${G}"Please put in your URL here for downloading rootfs: "${W}
+read URL        
+sleep 1
+echo ${G}"Please put in your distro name "
+echo ${G}"If you put in 'kali', your login script will be"
+echo ${G}" 'bash kali.sh' "${W}
 read ds_name
 sleep 1
 echo ${Y}"Your distro name is $ds_name "${W}
 sleep 2
-
 folder=$ds_name-fs
 if [ -d "$folder" ]; then
         echo ${G}"Existing file found, are you sure to remove it? (y or n)"${W}
@@ -86,6 +64,9 @@ if [ -d "$folder" ]; then
                 rm -rf ~/$folder
                 rm -rf ~/$ds_name.sh
                 sleep 2
+                if [ -d "$folder" ]; then
+                        echo ${R}"Cannot remove directory"; exit 1
+                fi 
         elif [[ "$ans" =~ ^([nN])$ ]]; then
         echo ${R}"Sorry, but we cannot complete the installation"
         exit
@@ -102,11 +83,10 @@ clear
 if [[ "$link" =~ ^([nN])$ ]]; then
         echo ${G}"Downloading Rootfs....."${W}
         wget $URL -P ~/$folder/ 
-        path=~/$folder/*.tar.*
 fi 
 echo ${G}"Decompressing Rootfs....."${W}
 proot --link2symlink \
-    tar -xpf $path -C ~/$folder/ --exclude='dev'||:
+    tar -xpf ~/$folder/*.tar.* -C ~/$folder/ --exclude='dev'||:
 if [[ ! -d "$folder/etc" ]]; then
      mv $folder/*/* $folder/
 fi

@@ -17,4 +17,5 @@ bash wget-proot.sh
 ```
 ### Updates
 03/06/2023 Adding option for already downloaded files.
+07/06/2023 Remove option 
 
