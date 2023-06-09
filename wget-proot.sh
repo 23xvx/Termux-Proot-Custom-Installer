@@ -79,11 +79,9 @@ fi
 
 
 #Downloading and decompressing rootfs
-clear      
-if [[ "$link" =~ ^([nN])$ ]]; then
-        echo ${G}"Downloading Rootfs....."${W}
-        wget $URL -P ~/$folder/ 
-fi 
+clear 
+echo ${G}"Downloading Rootfs....."${W}
+wget $URL -P ~/$folder/ 
 echo ${G}"Decompressing Rootfs....."${W}
 proot --link2symlink \
     tar -xpf ~/$folder/*.tar.* -C ~/$folder/ --exclude='dev'||:
