@@ -15,7 +15,9 @@ Paste following command into Termux.
 curl https://raw.githubusercontent.com/23xvx/Termux-Proot-Custom-Installer/main/wget-proot.sh >> wget-proot.sh
 bash wget-proot.sh
 ```
-### Updates
-03/06/2023 Adding option for already downloaded files.
-07/06/2023 Remove option 
+### Changelog
+<p>03/06/2023 Adding option for already downloaded files.</p>
+<p>07/06/2023 Remove option (Error occurred).</p>
+<p>24/07/2023 Binding **cap_last_cap** in custom proot startup scipt.</p> 
+
 

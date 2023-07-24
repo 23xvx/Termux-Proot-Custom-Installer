@@ -10,16 +10,18 @@ W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
 
 #Warning
+clear 
 echo ${R}"Warning!
 Error may occur during installation."
 echo " "
-echo ${C}"Script made by No Hope#0281 "
+echo ${C}"Script made by 23xvx "
 sleep 2
-clear
 
 #requirements
+echo ""
+echo ${G}"Installing requirements"${W}
 pkg install proot pulseaudio wget -y
-clear
+echo " " 
 echo "Please allow storage permissions"
 termux-setup-storage
 clear
@@ -48,11 +50,13 @@ clear
 echo ${G}"Please put in your URL here for downloading rootfs: "${W}
 read URL        
 sleep 1
+echo " "
 echo ${G}"Please put in your distro name "
 echo ${G}"If you put in 'kali', your login script will be"
 echo ${G}" 'bash kali.sh' "${W}
 read ds_name
 sleep 1
+echo " "
 echo ${Y}"Your distro name is $ds_name "${W}
 sleep 2
 folder=$ds_name-fs
@@ -119,6 +123,7 @@ if [ -n "\$(ls -A $folder/binds)" ]; then
     done
 fi
 command+=" -b /dev"
+command+=" -b /dev/null:/proc/sys/kernel/cap_last_cap"
 command+=" -b /proc"
 command+=" -b /dev/null:/proc/stat"
 command+=" -b /sys"
