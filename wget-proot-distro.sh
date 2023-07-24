@@ -116,6 +116,7 @@ if [[ ! -f "$PREFIX/etc/proot-distro/$ds_name.sh" ]]; then
     # If you want customize installation, please make a copy.
 
     DISTRO_NAME="$ds_name" 
+    DISTRO_COMMENT="Custom distro : $ds_name"
     ">> $SCRIPT/$ds_name.sh 
 fi
 sleep 2
