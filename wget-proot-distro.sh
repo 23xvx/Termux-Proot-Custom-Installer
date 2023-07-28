@@ -51,9 +51,12 @@ clear
 echo ${G}"Please put in your URL here for downloading rootfs: "${W}
 read URL        
 sleep 1
+echo ""
 echo ${G}"Please put in your distro name "
-echo ${G}"If you put in 'kali', your login script will be "
-echo ${G}" proot-distro login kali"
+echo ${G}"If you put in 'gentoo', your login script will be "
+echo ${G}" proot-distro login gentoo"
+echo ${Y}"After proot-distro v3.17.0, these names cannot be used as distro name"
+echo ${Y}" kali / parrot / nethunter / blackarch"
 read ds_name 
 sleep 1
 echo ${Y}"Your distro name is $ds_name "${W}
@@ -91,13 +94,13 @@ fi
 #Downloading and Decompressing rootfs
 mkdir -p $PD/$ds_name
 echo ${G}"Downloading rootfs"${W}
-wget $URL  
+wget $URL -P $PD/$ds_name/
 echo ${G}"Decompressing rootfs"
 proot --link2symlink  \
     tar --warning=no-unknown-keyword \
         --delay-directory-restore --preserve-permissions \
-        -xpf *.tar.* -C $PD/$ds_name/ --exclude='dev'||:
-rm -rf ~/*.tar.*
+        -xpf $PD/$ds_name/*.tar.* -C $PD/$ds_name/ --exclude='dev'||:
+rm -rf $PD/$ds_name/*.tar.*
 if [[ ! -d "$PD/$ds_name/bin" ]]; then
      mv $PD/$ds_name/*/* $PD/$ds_name/
 fi
@@ -122,7 +125,7 @@ fi
 sleep 2
 clear
 
-#finish
+#Finish
 sleep 2
 echo ${G}"Installation Finish!"
 echo ${G}"Now you can login to your distro by" 
