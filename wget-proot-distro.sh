@@ -56,7 +56,7 @@ echo ${G}"Please put in your distro name "
 echo ${G}"If you put in 'gentoo', your login script will be "
 echo ${G}" proot-distro login gentoo"
 echo ${Y}"After proot-distro v3.17.0, these names cannot be used as distro name"
-echo ${Y}" kali / parrot / nethunter / blackarch"
+echo ${Y}" kali / parrot / nethunter / blackarch"${W}
 read ds_name 
 sleep 1
 echo ${Y}"Your distro name is $ds_name "${W}
