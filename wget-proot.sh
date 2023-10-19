@@ -22,25 +22,27 @@ echo ""
 echo ${G}"Installing requirements"${W}
 pkg install proot pulseaudio wget -y
 echo " " 
-echo "Please allow storage permissions"
-termux-setup-storage
-clear
+if [ -d "~/storage" ]; then
+        echo ${G}"Please allow storage permissions"
+        termux-setup-storage
+        clear
+fi 
 
 #Notice
-echo ${C}"Please check your architecture for downloading the right rootfs."
 echo ${C}"Your architecture is $ARCHITECTURE ."
 case `dpkg --print-architecture` in
     aarch64)
-            echo "Please download the rootfs file for arm64." ;;
+            arch="arm64" ;;
     arm*)
-            echo "Please download the rootfs file for armhf." ;;
+            arch="armhf" ;;
     ppc64el)
-            echo "Please download the rootfs file for ppc64el.";;
+            arch="ppc64el" ;;
     x86_64)
-            echo "Please download the rootfs file for amd64." ;;
+            arch="amd64" ;;
     *)
             echo "Unknown architecture"; exit 1 ;;
 esac
+echo "Please download the rootfs file for $arch." ;;
 echo "Press enter to continue"
 read enter
 sleep 1
