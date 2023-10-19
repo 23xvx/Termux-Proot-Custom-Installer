@@ -92,6 +92,7 @@ proot --link2symlink \
 if [[ ! -d "$folder/etc" ]]; then
      mv $folder/*/* $folder/
 fi
+mkdir -p ~/$folder/tmp
 echo "127.0.0.1 localhost" > ~/$folder/etc/hosts
 rm -rf ~/$folder/etc/resolv.conf
 echo "nameserver 8.8.8.8" > ~/$folder/etc/resolv.conf
