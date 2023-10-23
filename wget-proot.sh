@@ -42,7 +42,7 @@ case `dpkg --print-architecture` in
     *)
             echo "Unknown architecture"; exit 1 ;;
 esac
-echo "Please download the rootfs file for $arch." ;;
+echo "Please download the rootfs file for $arch." 
 echo "Press enter to continue"
 read enter
 sleep 1
