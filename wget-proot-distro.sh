@@ -94,7 +94,7 @@ fi
 #Downloading and Decompressing rootfs
 mkdir -p $PD/$ds_name
 echo ${G}"Downloading rootfs"${W}
-wget $URL -P $PD/$ds_name/
+wget -q --show-progress $URL -P $PD/$ds_name/
 echo ${G}"Decompressing rootfs"
 proot --link2symlink  \
     tar --warning=no-unknown-keyword \
