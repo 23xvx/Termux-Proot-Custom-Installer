@@ -22,7 +22,8 @@ echo ""
 echo ${G}"Installing requirements"${W}
 pkg install proot pulseaudio wget -y
 echo " " 
-if [ -d "~/storage" ]; then
+cd 
+if [ ! -d "storage" ]; then
         echo ${G}"Please allow storage permissions"
         termux-setup-storage
         clear
@@ -60,13 +61,13 @@ read ds_name
 sleep 1
 echo " "
 echo ${Y}"Your distro name is $ds_name "${W}
-sleep 2
+sleep 2 ; cd 
 folder=$ds_name-fs
 if [ -d "$folder" ]; then
         echo ${G}"Existing file found, are you sure to remove it? (y or n)"${W}
         read ans
         if [[ "$ans" =~ ^([yY])$ ]]; then
-                echo ${W}"Deleting existing directory...."${W}
+                echo ${Y}"Deleting existing directory...."${W}
                 rm -rf ~/$folder
                 rm -rf ~/$ds_name.sh
                 sleep 2
@@ -74,33 +75,51 @@ if [ -d "$folder" ]; then
                         echo ${R}"Cannot remove directory"; exit 1
                 fi 
         elif [[ "$ans" =~ ^([nN])$ ]]; then
-        echo ${R}"Sorry, but we cannot complete the installation"
-        exit
+                echo ${R}"Sorry, but we cannot complete the installation"
+                exit
         else 
-        echo
+                echo ${R}"Invalid answer"; exit 1
         fi
 else 
-mkdir -p $folder
+mkdir -p ~/$folder
 fi
 
 
 #Downloading and decompressing rootfs
 clear 
 echo ${G}"Downloading Rootfs....."${W} 
-wget -q --show-progress $URL -P ~/$folder/ 
+wget -q --show-progress $URL -P ~/$folder/
+if [ "$(ls ~/$folder)" == "" ]; then
+    echo ${R}"Error in downloading rootfs..."; exit 1
+fi
 echo ${G}"Decompressing Rootfs....."${W}
 proot --link2symlink \
-    tar -xpf ~/$folder/*.tar.* -C ~/$folder/ --exclude='dev'||:
-if [[ ! -d "$folder/etc" ]]; then
-     mv $folder/*/* $folder/
+    tar -xpf ~/$folder/*.tar.* -C ~/$folder/ --exclude='dev'
+if [[ ! -d "$folder/root" ]]; then
+    mv $folder/*/* $folder/
+    if [[ ! -d "$folder/root" ]]; then
+        echo ${R}"Error in decompressing rootfs"; exit 1
+    fi
 fi
+
+#Setting up environment 
 mkdir -p ~/$folder/tmp
 echo "127.0.0.1 localhost" > ~/$folder/etc/hosts
+rm -rf ~/$folder/etc/hostname
 rm -rf ~/$folder/etc/resolv.conf
+echo "localhost" > ~/$folder/etc/hostname
 echo "nameserver 8.8.8.8" > ~/$folder/etc/resolv.conf
-echo -e "#!/bin/sh\nexit" > "$folder/usr/bin/groups"
+echo -e "#!/bin/sh\nexit" > ~/$folder/usr/bin/groups
 mkdir -p $folder/binds
-
+cat <<- EOF >> "$folder/etc/environment"
+EXTERNAL_STORAGE=/sdcard
+LANG=en_US.UTF-8
+MOZ_FAKE_NO_SANDBOX=1
+PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games
+PULSE_SERVER=127.0.0.1
+TERM=xterm-256color
+TMPDIR=/tmp
+EOF
 
 #Sound Fix
 echo "export PULSE_SERVER=127.0.0.1" >> $folder/root/.bashrc
@@ -112,8 +131,17 @@ bin=$ds_name.sh
 cat > $bin <<- EOM
 #!/bin/bash
 cd \$(dirname \$0)
+
+## Start pulseaudio
+pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
+
+## Set login shell for different distributions
+login_shell=\$(grep "^root:" "$folder/etc/passwd" | cut -d ':' -f 7)
+
 ## unset LD_PRELOAD in case termux-exec is installed
 unset LD_PRELOAD
+
+## Proot Command
 command="proot"
 ## uncomment following line if you are having FATAL: kernel too old message.
 #command+=" -k 4.14.81"
@@ -133,7 +161,6 @@ command+=" -b /sys"
 command+=" -b /data/data/com.termux/files/usr/tmp:/tmp"
 command+=" -b $folder/tmp:/dev/shm"
 command+=" -b /data/data/com.termux"
-command+=" -b /:/host-rootfs"
 command+=" -b /sdcard"
 command+=" -b /storage"
 command+=" -b /mnt"
@@ -143,29 +170,23 @@ command+=" HOME=/root"
 command+=" PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games"
 command+=" TERM=\$TERM"
 command+=" LANG=C.UTF-8"
-command+=" /bin/bash --login"
+command+=" \$login_shell"
 com="\$@"
 if [ -z "\$1" ];then
-    pulseaudio --start \
-     --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" \
-     --exit-idle-time=-1;
     exec \$command
 else
     \$command -c "\$com"
 fi
 EOM
 
-echo "#!/bin/bash
-touch ~/.hushlogin
-rm -rf ~/.bash_profile
-exit" > $folder/root/.bash_profile
 clear
 termux-fix-shebang $bin
 rm -rf $folder/*.tar.*
-bash $bin
+bash $bin "touch ~/.hushlogin ; exit"
 clear 
 rm -rf ~/wget-proot.sh
 echo ""
 echo ${R}"If you find problem, try to restart Termux !"
-echo ${G}"You can now start your distro with '$ds_name.sh' script next time"
+echo ${G}"You can now start your distro with '$ds_name.sh' script"
+echo ${G}" Command : ${Y}bash $ds_name.sh "
 echo ""
