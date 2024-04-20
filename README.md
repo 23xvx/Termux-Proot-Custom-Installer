@@ -21,9 +21,9 @@ bash wget-proot.sh
 ```
 
 ### Changelog
-03/06/2023 Adding option for already downloaded files.<br>
-07/06/2023 Remove option (Error occurred).<br>
-24/07/2023 Binding ***cap_last_cap*** in custom proot startup scipt.<br>
-21/12/2023 Huge improvement on wget-proot.sh , making it more flexible and easy to configure.
+- 03/06/2023 Adding option for already downloaded files.<br>
+- 07/06/2023 Remove option (Error occurred).<br>
+- 24/07/2023 Binding ***cap_last_cap*** in custom proot startup scipt.<br>
+- 21/12/2023 Huge improvement on wget-proot.sh , making it more flexible and easy to configure.
 
 
