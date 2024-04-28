@@ -122,14 +122,14 @@ echo -e "#!/bin/sh\nexit" > "$PD/$ds_name/usr/bin/groups"
 
 #Adding distro in proot-distro list
 if [[ ! -f "$PREFIX/etc/proot-distro/$ds_name.sh" ]]; then
-    echo '
+    echo "
     # This is a default distribution plug-in.
     # Do not modify this file as your changes will be overwritten on next update.
     # If you want customize installation, please make a copy.
 
-    DISTRO_NAME="$ds_name" 
-    DISTRO_COMMENT="Custom distro : $ds_name"
-    '>> $SCRIPT/$ds_name.sh 
+    DISTRO_NAME='$ds_name'
+    DISTRO_COMMENT='Custom distro : $ds_name'
+    ">> $SCRIPT/$ds_name.sh 
 fi
 sleep 2
 clear
