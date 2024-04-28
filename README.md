@@ -1,5 +1,5 @@
 ### Termux-Proot-Custom-Installer
- A automatic script to install any distro by yourself in Termux.
+ An easy script to install any distro by yourself in Termux.
  You need to find the URL of rootfs images by yourself.
 
 ### Some recommended sites

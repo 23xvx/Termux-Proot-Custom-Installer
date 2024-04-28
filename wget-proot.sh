@@ -9,6 +9,23 @@ Y="$(printf '\033[1;33m')"
 W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
 
+# some functions
+## ask() - prompt the user with a message and wait for a Y/N answer
+## copied from udroid 
+ask() {
+    local msg=$*
+
+    echo -ne "$msg\t[y/n]: "
+    read -r choice
+
+    case $choice in
+        y|Y|yes) return 0;;
+        n|N|No) return 1;;
+        "") return 0;;
+        *) return 1;;
+    esac
+}
+
 #Warning
 clear 
 echo ${R}"Warning!
@@ -64,9 +81,7 @@ sleep 2 ; cd
 
 rootfs_dir=$ds_name-fs
 if [ -d "$rootfs_dir" ]; then
-    echo ${G}"Existing distro found, are you sure to remove it? (y or n)"${W}
-    read ans
-    if [[ "$ans" =~ ^([yY])$ ]]; then
+    if ask "${G}Existing folder found, remove it ?${W}"; then
         echo ${Y}"Deleting existing directory...."${W}
         chmod u+rwx -R ~/$rootfs_dir
         rm -rf ~/$rootfs_dir
@@ -74,12 +89,10 @@ if [ -d "$rootfs_dir" ]; then
         if [ -d "$rootfs_dir" ]; then
             echo ${R}"Cannot remove directory"
             exit 1
-        fi 
-    elif [[ "$ans" =~ ^([nN])$ ]]; then
+        fi
+    else
         echo ${R}"Sorry, but we cannot complete the installation"
         exit
-    else 
-        echo ${R}"Invalid answer"; exit 1
     fi
 else 
     mkdir -p ~/$rootfs_dir
