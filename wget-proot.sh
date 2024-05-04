@@ -107,14 +107,14 @@ wget -q --show-progress $URL -P ~/$rootfs_dir/.cache/ || ( echo ${R}"Error in do
 echo ${G}"Decompressing Rootfs....."${W}
 proot --link2symlink tar -xpf ~/$rootfs_dir/.cache/$archive -C ~/$rootfs_dir/ --exclude='dev'
 rm -rf ~/$rootfs_dir/.cache
-if [[ ! -d $rootfs_dir/root ]]; then
+if [[ ! -d $rootfs_dir/etc ]]; then
     dirs=$(ls $rootfs_dir)
     for dir in $dirs; do
         mv $rootfs_dir/$dir/* $rootfs_dir/
         chmod u+rwx -R $rootfs_dir/$dir
         rm -rf $rootfs_dir/$dir
     done
-    if [[ ! -d $rootfs_dir/root ]]; then
+    if [[ ! -d $rootfs_dir/etc ]]; then
         echo ${R}"Error in decompressing rootfs"; exit 1
     fi
 fi
@@ -122,20 +122,20 @@ fi
 #Setting up environment
 mkdir -p ~/$rootfs_dir/tmp
 mkdir -p ~/$rootfs_dir/dev/shm
+mkdir -p ~/$rootfs_dir/binds
 rm -rf ~/$rootfs_dir/etc/hostname
 rm -rf ~/$rootfs_dir/etc/resolv.conf
 echo "localhost" > ~/$rootfs_dir/etc/hostname
 echo "127.0.0.1 localhost" > ~/$rootfs_dir/etc/hosts
 echo "nameserver 8.8.8.8" > ~/$rootfs_dir/etc/resolv.conf
 echo -e "#!/bin/sh\nexit" > ~/$rootfs_dir/usr/bin/groups
-mkdir -p $rootfs_dir/binds
 cat <<- EOF >> "$rootfs_dir/etc/environment"
 EXTERNAL_STORAGE=/sdcard
 LANG=en_US.UTF-8
 MOZ_FAKE_NO_SANDBOX=1
 PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games
 PULSE_SERVER=127.0.0.1
-TERM=xterm-256color
+TERM=${TERM-xterm-256color}
 TMPDIR=/tmp
 EOF
 
@@ -173,14 +173,18 @@ if [ -n "\$(ls -A $rootfs_dir/binds)" ]; then
 fi
 command+=" -b /dev"
 command+=" -b /dev/null:/proc/sys/kernel/cap_last_cap"
-command+=" -b /proc"
 command+=" -b /dev/null:/proc/stat"
+command+=" -b /dev/urandom:/dev/random"
+command+=" -b /proc"
+command+=" -b /proc/self/fd:/dev/fd" 
+command+=" -b /proc/self/fd/0:/dev/stdin"
+command+=" -b /proc/self/fd/1:/dev/stdout"
+command+=" -b /proc/self/fd/2:/dev/stderr"
 command+=" -b /sys"
 command+=" -b /data/data/com.termux/files/usr/tmp:/tmp"
 command+=" -b $rootfs_dir/tmp:/dev/shm"
 command+=" -b /data/data/com.termux"
 command+=" -b /sdcard"
-command+=" -b /storage"
 command+=" -b /mnt"
 command+=" -w /root"
 command+=" /usr/bin/env -i"
@@ -189,21 +193,32 @@ command+=" PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/us
 command+=" TERM=\$TERM"
 command+=" LANG=C.UTF-8"
 command+=" \$login_shell"
-com="\$@"
 if [ -z "\$1" ];then
-    exec \$command
+    \$command
 else
-    \$command -c "\$com"
+    if [ "\$1" == "-r" ]; then
+        echo "Removing rootfs directory..."
+        chmod u+rwx $rootfs_dir
+        rm -rf $bin
+        rm -rf $rootfs_dir
+        echo "Done!"
+    else
+        \$command -c "\$@"
+    fi
 fi
 EOM
 
 clear
 termux-fix-shebang $bin
 bash $bin "touch ~/.hushlogin ; exit"
-clear 
 rm -rf ~/wget-proot.sh
+clear 
 echo ""
 echo ${R}"If you find problem, try to restart Termux !"
 echo ${G}"You can now start your distro with '$ds_name.sh' script"
-echo ${G}" Command : ${Y}bash $ds_name.sh "
+echo ${W}" Command : ${Y}bash $ds_name.sh [Options]"
+echo ""
+echo ${W}" Options :"
+echo ${W}"     -r           : to remove rootfs directory" 
+echo ${W}"     *command*    : any comamnd to execute in proot and exit" 
 echo ""

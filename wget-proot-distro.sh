@@ -119,6 +119,15 @@ echo "127.0.0.1 localhost " >> $PD/$ds_name/etc/hosts
 echo "nameserver 8.8.8.8 " >> $PD/$ds_name/etc/resolv.conf
 echo "touch .hushlogin" >> $PD/$ds_name/root/.bashrc
 echo -e "#!/bin/sh\nexit" > "$PD/$ds_name/usr/bin/groups"
+cat <<- EOF >> "$PD/$ds_name/etc/environment"
+EXTERNAL_STORAGE=/sdcard
+LANG=en_US.UTF-8
+MOZ_FAKE_NO_SANDBOX=1
+PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games
+PULSE_SERVER=127.0.0.1
+TERM=${TERM-xterm-256color}
+TMPDIR=/tmp
+EOF
 
 #Adding distro in proot-distro list
 if [[ ! -f "$PREFIX/etc/proot-distro/$ds_name.sh" ]]; then
