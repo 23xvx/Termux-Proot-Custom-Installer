@@ -128,7 +128,6 @@ rm -rf ~/$rootfs_dir/etc/resolv.conf
 echo "localhost" > ~/$rootfs_dir/etc/hostname
 echo "127.0.0.1 localhost" > ~/$rootfs_dir/etc/hosts
 echo "nameserver 8.8.8.8" > ~/$rootfs_dir/etc/resolv.conf
-echo -e "#!/bin/sh\nexit" > ~/$rootfs_dir/usr/bin/groups
 cat <<- EOF >> "$rootfs_dir/etc/environment"
 EXTERNAL_STORAGE=/sdcard
 LANG=en_US.UTF-8
