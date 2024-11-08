@@ -56,7 +56,7 @@ case `dpkg --print-architecture` in
     x86_64)
         arch="amd64" ;;
     *)
-        echo "Unknown architecture"
+        echo "Unsupported architecture"
         exit 1 ;;
 esac
 echo "Please download the rootfs file for $arch." 
@@ -213,11 +213,11 @@ bash $bin "touch ~/.hushlogin ; exit"
 rm -rf ~/wget-proot.sh
 clear 
 echo ""
-echo ${R}"If you find problem, try to restart Termux !"
+echo ${R}"If you find problems, try to restart Termux !"
 echo ${G}"You can now start your distro with '$ds_name.sh' script"
 echo ${W}" Command : ${Y}bash $ds_name.sh [Options]"
 echo ""
 echo ${W}" Options :"
-echo ${W}"     -r           : to remove rootfs directory" 
+echo ${W}"     -r           : delete rootfs directory" 
 echo ${W}"     *command*    : any comamnd to execute in proot and exit" 
 echo ""
