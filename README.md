@@ -10,12 +10,14 @@
 ### 1. Via proot-distro
 Paste following command into Termux.
 ``` 
-curl -s https://raw.githubusercontent.com/23xvx/Termux-Proot-Custom-Installer/main/wget-proot-distro.sh | sh
+curl -s https://raw.githubusercontent.com/23xvx/Termux-Proot-Custom-Installer/main/wget-proot-distro.sh >> wget-proot-distro.sh
+bash wget-proot-distro.sh
 ```
 ### 2. Via Custom Proot (Recommend)
 Paste following command into Termux.
 ``` 
-curl -s https://raw.githubusercontent.com/23xvx/Termux-Proot-Custom-Installer/main/wget-proot.sh | sh
+curl -s https://raw.githubusercontent.com/23xvx/Termux-Proot-Custom-Installer/main/wget-proot.sh >> wget-proot.sh
+bash wget-proot.sh
 ```
 
 ### Changelog
@@ -25,5 +27,4 @@ curl -s https://raw.githubusercontent.com/23xvx/Termux-Proot-Custom-Installer/ma
 - 21/12/2023 Huge improvement on wget-proot.sh , making it more flexible and easy to configure.<br>
 - 04/05/2024 Adding option to remove rootfs directory in `wget-proot.sh`
 - 01/06/2024 Adding option to reinstall custom distro in `wget-proot-distro.sh`
-- 21/11/2024 Do not download installation script directly using `curl`
 
