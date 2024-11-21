@@ -31,8 +31,8 @@ ask() {
 #Warning
 clear
 echo ${R}"Warning!
-This script is not a suggested way for installing distro in termux.
-Error may occur during installation."
+This script is based on the functions of proot-distro
+Errors may occur during installation."
 sleep 3
 
 #requirements
@@ -48,7 +48,7 @@ case `dpkg --print-architecture` in
         arch="arm64" ;;
     arm*)
         arch="armhf" ;;
-    x86_64)
+    x86_64|amd64)
         arch="amd64" ;;
     *)
         echo "Unknown architecture"

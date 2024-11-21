@@ -53,7 +53,7 @@ case `dpkg --print-architecture` in
         arch="arm64" ;;
     arm*)
         arch="armhf" ;;
-    x86_64)
+    x86_64|amd64)
         arch="amd64" ;;
     *)
         echo "Unsupported architecture"
@@ -210,7 +210,6 @@ EOM
 clear
 termux-fix-shebang $bin
 bash $bin "touch ~/.hushlogin ; exit"
-rm -rf ~/wget-proot.sh
 clear 
 echo ""
 echo ${R}"If you find problems, try to restart Termux !"
