@@ -3,11 +3,58 @@
 ARCHITECTURE=$(dpkg --print-architecture)
 
 #Adding colors
+RST="$(printf '\033[0m')"
 R="$(printf '\033[1;31m')"
 G="$(printf '\033[1;32m')"
 Y="$(printf '\033[1;33m')"
 W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
+
+# Arguments taken if needed
+if [ -z "$1" ]; then
+    mode="normal"
+else
+    mode="args"
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                echo "${G} Usage: ${W} $0 <options> ${RST}"
+                echo
+                echo "${G} The script will ask for the URL and name of the distro during installation as default"
+                echo "${G} If you want to provide the URL and name as arguments, use the following options:"
+                echo
+                echo "${Y}     --url <url>          ${C}URL of the rootfs tarball${RST}" 
+                echo "${Y}     --name <name>        ${C}name of the distro${RST}"
+                exit 0
+                ;;
+            --url)
+                [[ -z "$2" ]] && echo "${R}URL not provided after '${Y}--url${R}'${RST}" && exit 1
+                [[ $2 == -* ]] && echo "${R}option '${Y}${2}${R}' cannot be used after '${Y}--url'${RST}" && exit 1
+                url=$2
+                shift 2
+                ;;
+            --name)
+                [[ -z "$2" ]] && echo "${R}Name not provided after '${Y}--name${R}'${RST}" && exit 1
+                [[ $2 == -* ]] && echo "${R}option '${Y}${2}${R}' cannot be used after '${Y}--name'${RST}" && exit 1
+                name=$2
+                shift 2
+                ;;
+            *) echo "${R}Unknown option '${Y}$1${R}'${RST}" && exit 1 ;;
+        esac
+    done
+fi
+
+# Check if required arguments are provided
+if [[ $mode == "args" ]]; then
+    if [[ -z $url ]]; then
+        echo "${R}URL not provided '${Y}--url${R}'${RST}"
+        exit 1
+    fi
+    if [[ -z $name ]]; then
+        echo "${R}Name not provided with '${Y}--name${R}'${RST}"
+        exit 1
+    fi
+fi
 
 # some functions
 ## ask() - prompt the user with a message and wait for a Y/N answer
@@ -36,7 +83,7 @@ sleep 2
 
 #requirements
 echo ""
-echo ${G}"Installing requirements"${W}
+echo ${G}"Installing requirements"${RST}
 pkg install proot pulseaudio wget -y
 echo " " 
 cd 
@@ -66,23 +113,29 @@ sleep 1
 clear
 
 #Links
-echo ${G}"Please put in your URL here for downloading rootfs: "${W}
-read URL        
-sleep 1
-echo " "
-echo ${G}"Please put in your distro name "
-echo ${G}"If you put in 'kali', your login script will be"
-echo ${G}" 'bash kali.sh' "${W}
-read ds_name
-sleep 1
-echo " "
-echo ${Y}"Your distro name is $ds_name "${W}
+if [[ $mode == "arg" ]]; then
+    URL=$url
+    ds_name=$name
+    echo ${G}"Your URl is $URL${RST}"
+else
+    echo ${G}"Please put in your URL here for downloading rootfs: "${W}
+    read URL        
+    sleep 1
+    echo " "
+    echo ${G}"Please put in your distro name "
+    echo ${G}"If you put in 'kali', your login script will be"
+    echo ${G}" '${Y}bash kali.sh${G}' "${W}
+    read ds_name
+    sleep 1
+fi
+
+echo ${Y}"Your distro name is $ds_name "${RST}
 sleep 2 ; cd
 
 rootfs_dir=$ds_name-fs
 if [ -d "$rootfs_dir" ]; then
     if ask "${G}Existing folder found, remove it ?${W}"; then
-        echo ${Y}"Deleting existing directory...."${W}
+        echo ${Y}"Deleting existing directory...."${RST}
         chmod u+rwx -R ~/$rootfs_dir
         rm -rf ~/$rootfs_dir
         rm -rf ~/$ds_name.sh
@@ -102,7 +155,7 @@ clear
 
 #Downloading and decompressing rootfs
 archive=$(echo $URL | awk -F / '{print $NF}')
-echo ${G}"Downloading $archive....."${W}
+echo ${G}"Downloading $archive....."${RST}
 wget -q --show-progress $URL -P ~/$rootfs_dir/.cache/ || ( echo ${R}"Error in downloading rootfs,exiting..." && exit 1 )
 echo ${G}"Decompressing Rootfs....."${W}
 proot --link2symlink tar -xpf ~/$rootfs_dir/.cache/$archive -C ~/$rootfs_dir/ --exclude='dev'
@@ -163,6 +216,7 @@ command="proot"
 ## uncomment following line if you are having FATAL: kernel too old message.
 #command+=" -k 4.14.81"
 command+=" --link2symlink"
+command+=" --kill-on-exit"
 command+=" -0"
 command+=" -r $rootfs_dir"
 if [ -n "\$(ls -A $rootfs_dir/binds)" ]; then
