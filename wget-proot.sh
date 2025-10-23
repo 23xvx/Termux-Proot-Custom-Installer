@@ -181,6 +181,7 @@ rm -rf ~/$rootfs_dir/etc/resolv.conf
 echo "localhost" > ~/$rootfs_dir/etc/hostname
 echo "127.0.0.1 localhost" > ~/$rootfs_dir/etc/hosts
 echo "nameserver 8.8.8.8" > ~/$rootfs_dir/etc/resolv.conf
+echo "4096" > ~/$rootfs_dir/binds/.sysctl_inotify_max_user_watches
 cat <<- EOF >> "$rootfs_dir/etc/environment"
 EXTERNAL_STORAGE=/sdcard
 LANG=en_US.UTF-8
@@ -219,11 +220,6 @@ command+=" --link2symlink"
 command+=" --kill-on-exit"
 command+=" -0"
 command+=" -r $rootfs_dir"
-if [ -n "\$(ls -A $rootfs_dir/binds)" ]; then
-    for f in $rootfs_dir/binds/* ;do
-      . \$f
-    done
-fi
 command+=" -b /dev"
 command+=" -b /dev/null:/proc/sys/kernel/cap_last_cap"
 command+=" -b /dev/null:/proc/stat"
@@ -233,6 +229,7 @@ command+=" -b /proc/self/fd:/dev/fd"
 command+=" -b /proc/self/fd/0:/dev/stdin"
 command+=" -b /proc/self/fd/1:/dev/stdout"
 command+=" -b /proc/self/fd/2:/dev/stderr"
+command+=" -b $rootfs_dir/binds/.sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches"
 command+=" -b /sys"
 command+=" -b /data/data/com.termux/files/usr/tmp:/tmp"
 command+=" -b $rootfs_dir/tmp:/dev/shm"
