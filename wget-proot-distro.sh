@@ -131,7 +131,7 @@ fi
 echo ${Y}"Your distro name is $ds_name "${RST}
 sleep 2
 
-rootfs_dir="~/.local/share/cached-rootfs"
+rootfs_dir="$HOME/.local/share/cached-rootfs"
 mkdir -p $rootfs_dir
 
 #Downloading and Decompressing rootfs
